@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIT Event Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Additional alignment fixes */
+        .about-content p {
+            text-align: justify;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        .feature {
+            text-align: left;
+            padding: 1.5rem;
+        }
+        
+        .feature h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .feature p {
+            text-align: left;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .feature li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        
+        .contact-info p {
+            margin-bottom: 0.8rem;
+        }
+        
+        .event-card {
+            text-align: left;
+        }
+        
+        .event-description {
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">BIT Event Management</h1>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="login.html" class="btn-login">Login</a></li>
+                <li><a href="signup.html" class="btn-signup">Sign Up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Welcome to BIT Event Management System</h1>
+            <p>Discover, Register, and Participate in exciting college events</p>
+            <div class="hero-buttons">
+                <a href="signup.html" class="btn btn-primary">Get Started</a>
+                <a href="#events" class="btn btn-secondary">Browse Events</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="events" class="events-section">
+        <div class="container">
+            <h2 class="section-title">Upcoming Events</h2>
+            <div id="events-container" class="events-grid">
+                <!-- Events will be loaded here dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <p>Welcome to BIT Event Management System. The BIT Event Management System is a centralized and user-friendly platform developed to simplify the planning, management, and participation of college events. Our system connects students, faculty, and administrators in one digital space, ensuring smooth communication and efficient event handling. From technical symposiums to cultural festivals, our platform ensures every event is organized, monitored, and executed seamlessly.</p>
+                
+                <h3 style="text-align: center; margin: 2rem 0 1rem; color: var(--primary-color);">🎯 Our Mission</h3>
+                <p style="text-align: center; font-weight: 500;">To provide a smart and efficient digital solution that enhances event organization, improves student engagement, and reduces manual workload for faculty and administrators.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <h3>👨‍🎓 For Students</h3>
+                        <ul>
+                            <li>Browse upcoming technical and non-technical events</li>
+                            <li>Register for events online with ease</li>
+                            <li>Track your registered events</li>
+                            <li>Receive instant updates and notifications</li>
+                            <li>View event details such as date, venue, and organizer</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature">
+                        <h3>👨‍🏫 For Faculty</h3>
+                        <ul>
+                            <li>Monitor student registrations</li>
+                            <li>View participant lists</li>
+                            <li>Track event participation details</li>
+                            <li>Generate participation reports</li>
+                            <li>Support smooth coordination of events</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <p><strong>📧 Email:</strong> support@bitevents.com</p>
+                    <p><strong>📞 Phone:</strong> +91 12345 67890</p>
+                    <p><strong>📍 Address:</strong> Bannari Amman Institute of Technology, Sathyamangalam, Tamil Nadu - 638401</p>
+                </div>
+                
+                <form id="contact-form" class="contact-form">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea placeholder="Your Message" rows="5" required></textarea>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 BIT Event Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Load upcoming events on homepage
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/events');
+                const events = await response.json();
+                
+                const container = document.getElementById('events-container');
+                
+                if (events.length === 0) {
+                    container.innerHTML = '<p class="no-events">No upcoming events at the moment.</p>';
+                    return;
+                }
+
+                events.slice(0, 500).forEach(event => {
+                    const date = new Date(event.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+
+                    container.innerHTML += `
+                        <div class="event-card">
+                            <h3>${event.title}</h3>
+                            <p class="event-date">📅 ${date} at ${event.time}</p>
+                            <p class="event-venue">📍 ${event.venue}</p>
+                            <p class="event-description">${event.description.substring(0, 100)}...</p>
+                            <a href="login.html" class="btn-register">Register Now</a>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('events-container').innerHTML = '<p class="error">Error loading events. Make sure backend is running.</p>';
+            }
+        });
+
+        // Handle contact form submission
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

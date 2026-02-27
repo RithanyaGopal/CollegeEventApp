@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - BIT Event Management</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">BIT Event Management</h1>
+
+            <!-- Mobile menu button -->
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#events" onclick="showTab('events')"><i class="fas fa-calendar"></i> Events</a></li>
+                <li><a href="#registrations" onclick="showTab('registrations')"><i class="fas fa-users"></i>
+                        Registrations</a></li>
+                <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <div class="container">
+            <div class="welcome-section">
+                <h1>Welcome, <span id="faculty-name"></span>!</h1>
+                <p>View and manage event registrations</p>
+            </div>
+
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="showTab('events')">All Events</button>
+                <button class="tab-btn" onclick="showTab('registrations')">Registration Details</button>
+            </div>
+
+            <div id="events-tab" class="tab-content active">
+                <h2>College Events</h2>
+                <div id="events-container" class="events-grid">
+                    <!-- Events will be loaded here -->
+                </div>
+            </div>
+
+            <div id="registrations-tab" class="tab-content">
+                <h2>Event Registrations</h2>
+                <div class="event-selector">
+                    <label for="event-select">Select Event:</label>
+                    <select id="event-select" onchange="loadRegistrations()">
+                        <option value="">Choose an event</option>
+                    </select>
+                </div>
+                <div id="registrations-container" class="registrations-table-container">
+                    <!-- Registrations table will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/faculty.js"></script>
+</body>
+
+</html>

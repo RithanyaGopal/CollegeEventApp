@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - College Event Management</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="logo">College Event Management</h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#events">Events</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html" class="active">Sign Up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Create an Account</h2>
+            
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <div id="success-message" class="success-message" style="display: none;"></div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required minlength="6">
+                    <small>Minimum 6 characters</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">I am a</label>
+                    <select id="role" name="role" required>
+                        <option value="">Select role</option>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                
+                <div id="student-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="studentId">Student ID</label>
+                        <input type="text" id="studentId" name="studentId">
+                        <small>Required for students</small>
+                    </div>
+                </div>
+                
+                <div id="faculty-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="facultyId">Faculty ID</label>
+                        <input type="text" id="facultyId" name="facultyId">
+                        <small>Required for faculty</small>
+                    </div>
+                </div>
+                
+                <div id="admin-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="adminId">Admin ID</label>
+                        <input type="text" id="adminId" name="adminId">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminCode">Admin Secret Code</label>
+                        <input type="password" id="adminCode" name="adminCode" placeholder="Enter admin secret code">
+                        <small>Use: admin123</small>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+            </form>
+            
+            <p class="auth-link">
+                Already have an account? <a href="login.html">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Show/hide role-specific fields
+        document.getElementById('role').addEventListener('change', function() {
+            const studentFields = document.getElementById('student-fields');
+            const facultyFields = document.getElementById('faculty-fields');
+            const adminFields = document.getElementById('admin-fields');
+            
+            // Hide all first
+            studentFields.style.display = 'none';
+            facultyFields.style.display = 'none';
+            adminFields.style.display = 'none';
+            
+            // Remove required attributes
+            document.getElementById('studentId').required = false;
+            document.getElementById('facultyId').required = false;
+            document.getElementById('adminId').required = false;
+            document.getElementById('adminCode').required = false;
+            
+            if (this.value === 'student') {
+                studentFields.style.display = 'block';
+                document.getElementById('studentId').required = true;
+            } else if (this.value === 'faculty') {
+                facultyFields.style.display = 'block';
+                document.getElementById('facultyId').required = true;
+            } else if (this.value === 'admin') {
+                adminFields.style.display = 'block';
+                document.getElementById('adminId').required = true;
+                document.getElementById('adminCode').required = true;
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const role = document.getElementById('role').value;
+            const adminCode = document.getElementById('adminCode')?.value;
+            
+            // Verify admin code if role is admin
+            if (role === 'admin' && adminCode !== 'admin123') {
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('error-message').textContent = 'Invalid admin secret code';
+                return;
+            }
+            
+            // Base user data - no department, no phone number
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                role: role
+            };
+            
+            // Add role-specific IDs
+            if (role === 'student') {
+                formData.studentId = document.getElementById('studentId').value;
+            } else if (role === 'faculty') {
+                formData.facultyId = document.getElementById('facultyId').value;
+            } else if (role === 'admin') {
+                formData.adminId = document.getElementById('adminId').value;
+            }
+            
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    successMessage.style.display = 'block';
+                    successMessage.textContent = 'Account created successfully! Redirecting to login...';
+                    errorMessage.style.display = 'none';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = data.message || 'Signup failed';
+                    successMessage.style.display = 'none';
+                }
+            } catch (error) {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Error connecting to server';
+                successMessage.style.display = 'none';
+                console.error('Signup error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
