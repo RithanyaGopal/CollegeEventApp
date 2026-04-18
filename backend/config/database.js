@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
     try {
-        // Hardcoded connection string - no env file needed
-        const conn = await mongoose.connect('mongodb://127.0.0.1:27017/college_event_management');
+        const conn = await mongoose.connect('mongodb+srv://rithanyacs23_db_user:Rithanya2005@cluster0.t5pkjgz.mongodb.net/?appName=Cluster0');
         
         console.log(`MongoDB Connected: ${conn.connection.host}`);
         console.log(`Database: ${conn.connection.name}`);
@@ -12,5 +11,4 @@ const connectDB = async () => {
         process.exit(1);
     }
 };
-
 module.exports = connectDB;
