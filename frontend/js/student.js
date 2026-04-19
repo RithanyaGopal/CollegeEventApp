@@ -84,10 +84,10 @@ async function loadEvents() {
 
                     ${
                         isRegistered
-                            ? `<button disabled>Already Registered</button>`
+                            ? `<button class="btn-register" disabled>Already Registered</button>`
                             : event.currentParticipants < event.maxParticipants
-                                ? `<button onclick="openRegistrationModal('${event._id}')" data-event-id="${event._id}">Register Now</button>`
-                                : `<button disabled>Event Full</button>`
+                                ? `<button class="btn-register" onclick="openRegistrationModal('${event._id}')" data-event-id="${event._id}">Register Now</button>`
+                                : `<button class="btn-register" disabled>Event Full</button>`
                     }
                 </div>
             `;
@@ -188,9 +188,17 @@ document.querySelector(".close").addEventListener("click", () => {
     document.getElementById("registration-modal").style.display = "none";
 });
 
+// Close modal when clicking outside
+document.getElementById("registration-modal").addEventListener("click", (e) => {
+    if (e.target === document.getElementById("registration-modal")) {
+        document.getElementById("registration-modal").style.display = "none";
+    }
+});
+
 // Submit registration form
 document.getElementById("registration-form").addEventListener("submit", async e => {
     e.preventDefault();
+    console.log('Form submitted');
 
     const formData = {
         eventId: document.getElementById("event-id").value,
@@ -203,7 +211,10 @@ document.getElementById("registration-form").addEventListener("submit", async e 
         phoneNumber: document.getElementById("phoneNumber").value
     };
 
+    console.log('Form data:', formData);
+
     try {
+        console.log('Sending registration request...');
         const response = await fetch(`${API_URL}/api/registrations`, {
             method: "POST",
             headers: {
@@ -213,7 +224,9 @@ document.getElementById("registration-form").addEventListener("submit", async e 
             body: JSON.stringify(formData)
         });
 
+        console.log('Response status:', response.status);
         const data = await response.json();
+        console.log('Response data:', data);
 
         if (response.ok) {
             alert("Registration successful");
@@ -227,7 +240,7 @@ document.getElementById("registration-form").addEventListener("submit", async e 
         }
 
     } catch (error) {
-        console.error(error);
+        console.error('Registration error:', error);
         alert("Error registering");
     }
 });
