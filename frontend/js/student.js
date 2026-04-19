@@ -13,6 +13,10 @@ document.getElementById("student-name").textContent = user.name;
 
 // Load events
 async function loadEvents() {
+    console.log('Loading events...');
+    console.log('API URL:', API_URL);
+    console.log('Token:', token ? 'Present' : 'Missing');
+
     try {
         const response = await fetch(`${API_URL}/api/events`, {
             headers: {
@@ -20,7 +24,18 @@ async function loadEvents() {
             }
         });
 
+        console.log('Events API response status:', response.status);
+
+        if (!response.ok) {
+            console.error('Failed to load events:', response.statusText);
+            const container = document.getElementById("events-container");
+            container.innerHTML = '<p class="error">Failed to load events. Please try again.</p>';
+            return;
+        }
+
         const events = await response.json();
+        console.log('Events loaded:', events);
+
         const container = document.getElementById("events-container");
 
         if (events.length === 0) {
@@ -39,13 +54,25 @@ async function loadEvents() {
             }
         );
 
-        const registrations = await regResponse.json();
+        console.log('My registrations response status:', regResponse.status);
+
+        let registrations = [];
+        if (regResponse.ok) {
+            registrations = await regResponse.json();
+            console.log('My registrations:', registrations);
+        } else {
+            console.error('Failed to load registrations:', regResponse.statusText);
+        }
+
         const registeredEventIds = registrations.map(r => r.event._id);
+        console.log('Registered event IDs:', registeredEventIds);
 
         container.innerHTML = events.map(event => {
             const date = new Date(event.date).toLocaleDateString();
-
             const isRegistered = registeredEventIds.includes(event._id);
+            const isFull = event.currentParticipants >= event.maxParticipants;
+
+            console.log(`Event ${event._id}: registered=${isRegistered}, full=${isFull}, participants=${event.currentParticipants}/${event.maxParticipants}`);
 
             return `
                 <div class="event-card">
@@ -59,7 +86,7 @@ async function loadEvents() {
                         isRegistered
                             ? `<button disabled>Already Registered</button>`
                             : event.currentParticipants < event.maxParticipants
-                                ? `<button onclick="openRegistrationModal('${event._id}')">Register Now</button>`
+                                ? `<button onclick="openRegistrationModal('${event._id}')" data-event-id="${event._id}">Register Now</button>`
                                 : `<button disabled>Event Full</button>`
                     }
                 </div>
@@ -122,13 +149,38 @@ async function loadMyRegistrations() {
 
 // Open modal
 function openRegistrationModal(eventId) {
-    document.getElementById("event-id").value = eventId;
+    console.log('Opening registration modal for event:', eventId);
+    console.log('User object:', user);
 
-    document.getElementById("fullName").value = user.name || "";
-    document.getElementById("email").value = user.email || "";
-    document.getElementById("department").value = user.department || "";
+    if (!user) {
+        console.error('User not found! Redirecting to login.');
+        window.location.href = "login.html";
+        return;
+    }
 
-    document.getElementById("registration-modal").style.display = "flex";
+    const modal = document.getElementById("registration-modal");
+    if (!modal) {
+        console.error('Registration modal element not found!');
+        return;
+    }
+
+    const eventIdInput = document.getElementById("event-id");
+    const fullNameInput = document.getElementById("fullName");
+    const emailInput = document.getElementById("email");
+    const departmentInput = document.getElementById("department");
+
+    if (!eventIdInput || !fullNameInput || !emailInput || !departmentInput) {
+        console.error('Some form elements not found!');
+        return;
+    }
+
+    eventIdInput.value = eventId;
+    fullNameInput.value = user.name || "";
+    emailInput.value = user.email || "";
+    departmentInput.value = user.department || ""; // This will be empty, but that's OK
+
+    modal.style.display = "flex";
+    console.log('Modal opened successfully');
 }
 
 // Close modal
