@@ -28,6 +28,8 @@
         </div>
     </nav>
 
+    <div id="notification" class="notification" style="display: none;"></div>
+
     <div class="dashboard">
         <div class="container">
             <div class="welcome-section">
@@ -146,7 +148,14 @@
         </div>
     </div>
 
-    <script src="js/admin.js"></script>
-</body>
+    <!-- Registrations Modal -->
+    <div id="registrations-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Event Registrations</h2>
+            <div id="registrations-list"></div>
+        </div>
+    </div>
 
+    <script src="js/admin.js?v=10"></script>
 </html>
