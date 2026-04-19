@@ -3,7 +3,7 @@ const debugLog = (msg) => {
     console.log(msg);
 };
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://collegeeventapp-1.onrender.com";
 
 debugLog('✓ Admin script loaded');
 

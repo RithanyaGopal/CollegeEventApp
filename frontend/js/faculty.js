@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "https://collegeeventapp-1.onrender.com";
 
 // Check authentication
 const token = localStorage.getItem("token");
