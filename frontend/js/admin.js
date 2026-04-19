@@ -11,6 +11,32 @@ if (!token || !user || user.role !== "admin") {
 // Display admin name
 document.getElementById("admin-name").textContent = user.name;
 
+// Tab switching functionality
+function showTab(tabName, event) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Show the selected tab content
+    const activeTab = document.getElementById(tabName + '-tab');
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+
+    // Add active class to the clicked button
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+}
+
 // Load all events
 async function loadEvents() {
     try {
@@ -227,29 +253,3 @@ document.querySelectorAll(".close").forEach(btn => {
 
 // Initial Load
 loadEvents();
-
-// Tab switching functionality
-function showTab(tabName, event) {
-    // Hide all tab contents
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabContents.forEach(tab => {
-        tab.classList.remove('active');
-    });
-
-    // Remove active class from all tab buttons
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    tabButtons.forEach(btn => {
-        btn.classList.remove('active');
-    });
-
-    // Show the selected tab content
-    const activeTab = document.getElementById(tabName + '-tab');
-    if (activeTab) {
-        activeTab.classList.add('active');
-    }
-
-    // Add active class to the clicked button
-    if (event && event.target) {
-        event.target.classList.add('active');
-    }
-}
