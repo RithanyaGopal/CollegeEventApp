@@ -20,9 +20,9 @@
 
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                <li><a href="#events" onclick="showTab('events')"><i class="fas fa-calendar"></i> Events</a></li>
-                <li><a href="#manage" onclick="showTab('manage')"><i class="fas fa-cog"></i> Manage</a></li>
-                <li><a href="#statistics" onclick="showTab('statistics')"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+                <li><a href="#events" onclick="showTab('events', event)"><i class="fas fa-calendar"></i> Events</a></li>
+                <li><a href="#manage" onclick="showTab('manage', event)"><i class="fas fa-cog"></i> Manage</a></li>
+                <li><a href="#stats" onclick="showTab('stats', event)"><i class="fas fa-chart-bar"></i> Statistics</a></li>
                 <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </div>
@@ -36,9 +36,9 @@
             </div>
 
             <div class="dashboard-tabs">
-                <button class="tab-btn active" onclick="showTab('events')">All Events</button>
-                <button class="tab-btn" onclick="showTab('manage')">Manage Events</button>
-                <button class="tab-btn" onclick="showTab('stats')">Statistics</button>
+                <button class="tab-btn active" onclick="showTab('events', event)">All Events</button>
+                <button class="tab-btn" onclick="showTab('manage', event)">Manage Events</button>
+                <button class="tab-btn" onclick="showTab('stats', event)">Statistics</button>
             </div>
 
             <div id="events-tab" class="tab-content active">
@@ -139,20 +139,6 @@
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
                     </select>
-                </div>
-
-                <div id="manage-tab" class="tab-content">
-                    <div class="manage-header">
-                        <h2><i class="fas fa-calendar-alt"></i> Manage Events</h2>
-                        <button class="btn-add-event" onclick="openAddEventModal()">
-                            <i class="fas fa-plus-circle"></i>
-                            Add New Event
-                        </button>
-                    </div>
-
-                    <div id="manage-events-container" class="manage-events-grid">
-                        <!-- Events will be loaded dynamically -->
-                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block">Save Event</button>
